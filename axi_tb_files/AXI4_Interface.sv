@@ -1,3 +1,29 @@
+//  ###########################################################################
+//
+//  Licensed to the Apache Software Foundation (ASF) under one
+//  or more contributor license agreements.  See the NOTICE file
+//  distributed with this work for additional information
+//  regarding copyright ownership.  The ASF licenses this file
+//  to you under the Apache License, Version 2.0 (the
+//  "License"); you may not use this file except in compliance
+//  with the License.  You may obtain a copy of the License at
+//
+//  http://www.apache.org/licenses/LICENSE-2.0
+//
+//  Unless required by applicable law or agreed to in writing,
+//  software distributed under the License is distributed on an
+//  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+//  KIND, either express or implied.  See the License for the
+//  specific language governing permissions and limitations
+//  under the License.
+//
+//  ###########################################################################
+
+`ifndef AXI_INTF_INCLUDED_
+`define AXI_INTF_INCLUDED_
+
+//Inferface file for AXI4 protocol containing all the interface signals
+
 interface axi_if (input bit clk);
 
 logic [3:0]  AWID;
@@ -50,7 +76,7 @@ logic 	     RUSER;
 logic 	     RVALID;
 logic 	     RREADY;
 
-// Master_driver
+// Master_driver clocking block
 clocking m_drv_cb @(posedge clk);
 default input #1 output #1;
 output   AWID;
@@ -105,7 +131,7 @@ output 	 RREADY;
 
 endclocking
 
-//master_monitor
+//master_monitor clocking block
 clocking m_mon_cb @(posedge clk);
 default input #1 output #1;
 
@@ -161,7 +187,7 @@ input 	RREADY;
 
 endclocking
 
-//slave_driver
+//slave_driver clocking block
 clocking s_drv_cb @(posedge clk);
 default input #1 output #1;
 
@@ -217,8 +243,7 @@ input 	RREADY;
 
 endclocking
 
-//slave_monitor
-
+//slave_monitor clocking block
 clocking s_mon_cb @(posedge clk);
 default input #1 output #1;
 
@@ -283,3 +308,5 @@ modport S_DRV_MP(clocking s_drv_cb);
 modport S_MON_MP(clocking s_mon_cb);
 
 endinterface
+
+`endif

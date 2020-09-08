@@ -1,11 +1,50 @@
- class axi_seq_item extends uvm_sequence_item;
+//  ###########################################################################
+//
+//  Licensed to the Apache Software Foundation (ASF) under one
+//  or more contributor license agreements.  See the NOTICE file
+//  distributed with this work for additional information
+//  regarding copyright ownership.  The ASF licenses this file
+//  to you under the Apache License, Version 2.0 (the
+//  "License"); you may not use this file except in compliance
+//  with the License.  You may obtain a copy of the License at
+//
+//  http://www.apache.org/licenses/LICENSE-2.0
+//
+//  Unless required by applicable law or agreed to in writing,
+//  software distributed under the License is distributed on an
+//  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+//  KIND, either express or implied.  See the License for the
+//  specific language governing permissions and limitations
+//  under the License.
+//
+//  ###########################################################################
+
+`ifndef AXI_SEQ_ITEM_INCLUDED_
+`define AXI_SEQ_ITEM_INCLUDED_
+
+//------------------------------------------------------------------------------
+// Class: axi_seq_item
+// Description of class. For ex:
+// This class consist of data fields required for generating the stimulus.
+//
+// -----------------------------------------------------------------------------
+
+class axi_seq_item extends uvm_sequence_item;
   
   `uvm_object_utils(axi_seq_item)
 
+//-----------------------------------------------------------------------------
+// Constructor: new
+// Initializes the axi_seq_item class object
+//
+// Parameters:
+//  name - instance name of the axi_seq_item
+//-----------------------------------------------------------------------------
   function new(string name = "axi_seq_item");
     super.new(name);
   endfunction
   
+  // Write address channel signals
   rand bit [3:0]                  AWID ;
   rand bit [31:0]                 AWADDR;
   rand bit [3:0]                  AWLEN;
@@ -14,11 +53,18 @@
   rand bit [1:0]                  AWLOCK;
   rand bit [3:0]                  AWCHACHE;
   rand bit [2:0]                  AWPROT;
+  rand bit                        AWVALID;
+  rand bit                        AWREADY;
   
+  // Write data channel signals
   rand bit [3:0]                  WID;
   rand bit [31:0]                 WDATA[];
   rand bit [3:0]                  WSTRB[];
-   
+  rand bit                        WLAST;
+  rand bit                        WVALID;
+  rand bit                        WREADY;
+
+  // Read address channel signals 
   rand bit [3:0]                  ARID;
   rand bit [31:0]                 ARADDR;
   rand bit [3:0]                  ARLEN;
@@ -27,11 +73,20 @@
   rand bit [1:0]                  ARLOCK;
   rand bit [3:0]                  ARCACHE;
   rand bit [2:0]                  ARPROT;
+  rand bit                        ARVALID;
+  rand bit                        ARREADY;
   
+  // Write response channel signals
   bit [3:0]                       BID;
   bit [1:0]                       BRESP;
+  bit                             BVALID;
+  bit                             BREADY;
+  
+  // Read data channel signals 
   bit [3:0]                       RID;
   bit [1:0]                       RRESP;
+  bit                             BVALID;
+  bit                             BREADY;
   
   constraint write_address_id_c {
     soft AWID == WID;
@@ -112,15 +167,42 @@
       
 endclass
 
+`endif
+
 //***********************************************************************************//
+
+`ifndef AXI_BASE_SEQ_INCLUDED_
+`define AXI_BASE_SEQ_INCLUDED_
+
+//------------------------------------------------------------------------------
+// Class: axi_base_sequence
+// Description of class. For ex:
+// This class is a base sequence class for axi which generates a series of sequence item(s).
+// It is parameterized with axi_seq_item, this defines the type of the item that sequence 
+// will send/receive to/from the driver. 
+// -----------------------------------------------------------------------------
+
 
 class axi_base_sequence extends uvm_sequence#(axi_seq_item);
   
   `uvm_object_utils(axi_sequence)
+
+//-----------------------------------------------------------------------------
+// Constructor: new
+// Initializes the axi_base_sequence class object
+//
+// Parameters:
+//  name - instance name of the axi_base_sequence
+//-----------------------------------------------------------------------------
     
   function new(string name = "axi_sequence");
     super.new(name);
   endfunction
+
+//------------------------------------------------------------------------------
+// Method: body()  
+// body method defines, what the sequence does.
+//------------------------------------------------------------------------------
    
   virtual task body();
     
@@ -133,15 +215,44 @@ class axi_base_sequence extends uvm_sequence#(axi_seq_item);
   endtask
   
 endclass
+`endif
+
+//***********************************************************************************//
+
+
+`ifndef AXI_WRITE_SEQ_INCLUDED_
+`define AXI_WRITE_SEQ_INCLUDED_
+
+//------------------------------------------------------------------------------
+// Class: axi_write_sequence
+// Description of class. For ex:
+// This class is a write sequence class for axi which generates a series of sequence 
+// item(s) for write channel.
+// It is extended from axi_base_sequence that will send/receive to/from the driver. 
+// 
+// -----------------------------------------------------------------------------
 
 class axi_write_sequence extends axi_base_sequence;
   
   `uvm_object_utils(axi_write_sequence)
-  
+ 
+//-----------------------------------------------------------------------------
+// Constructor: new
+// Initializes the axi_base_sequence class object
+//
+// Parameters:
+//  name - instance name of the axi_base_sequence
+//-----------------------------------------------------------------------------
+ 
   function new(string name = "axi_write_sequence");
     super.new(name);
   endfunction
-  
+
+//------------------------------------------------------------------------------
+// Method: body()  
+// body method defines, what the sequence does.
+//------------------------------------------------------------------------------
+
   virtual task body();
     int cmd;
     
@@ -159,3 +270,5 @@ class axi_write_sequence extends axi_base_sequence;
   endtask
   
 endclass
+
+`endif
