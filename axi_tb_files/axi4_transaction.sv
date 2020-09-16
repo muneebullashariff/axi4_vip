@@ -19,8 +19,17 @@
 //  
 //  ###########################################################################
 
+`ifndef _AXI_XTN_INCLUDED_
+`define _AXI_XTN_INCLUDED_
+
+//-----------------------------------------------------------------------------
+// Class: axi_xtn
+// Description of the class.
+// This class holds the data items required to drive stimulus to duv
+// and also holds methods that manipulate those data items
+//-----------------------------------------------------------------------------
+
 class axi_xtn extends uvm_sequence_item;
-//`uvm_object_utils(axi_xtn)
 
 typedef enum logic [1:0] {FIXED, INCR, WRAP, RESERVED} burst_t;
 typedef enum logic [1:0] {OKAY, EXOKAY, SLVERR, DECERR} resp_t;
@@ -72,20 +81,11 @@ rand logic      	RREADY;
      resp_t       RRESP;
      logic        RLAST;
 
-
-constraint WALIGNADDR {AWADDR % 4==0;} //aligned address
-constraint RALIGNADDR {ARADDR % 4==0;}
-constraint STROBE {WSTRB == 4'b1111;} //write strobe for valid data
-constraint WDATA_SIZE {WDATA.size() == AWLEN+1;} //burst length
-constraint RDATA_SIZE {RDATA.size() == ARLEN+1;}
-
-
-function new(string name="axi_xtn");
-super.new(name);
-endfunction
-
-
+//register with factory so that we can use create uvm method
+// and override in future if necessary
 `uvm_object_utils_begin(axi_xtn)
+
+//field macros
 `uvm_field_int(AWADDR,UVM_ALL_ON)
 `uvm_field_int(AWVALID,UVM_ALL_ON)
 `uvm_field_int(AWREADY,UVM_ALL_ON)
@@ -123,5 +123,33 @@ endfunction
 `uvm_field_int(RLAST,UVM_ALL_ON)
 
 `uvm_object_utils_end
+     
+//---------------------------------------
+//constraints
+//---------------------------------------
+constraint WALIGNADDR {AWADDR % 4==0;} //aligned address
+constraint RALIGNADDR {ARADDR % 4==0;}
+constraint STROBE {WSTRB == 4'b1111;} //write strobe for valid data
+constraint WDATA_SIZE {WDATA.size() == AWLEN+1;} //burst length
+constraint RDATA_SIZE {RDATA.size() == ARLEN+1;}
 
-endclass
+//---------------------------------------------
+// Externally defined tasks and functions
+//---------------------------------------------
+extern function new(string name="axi_xtn");
+
+endclass:axi_xtn
+
+//-----------------------------------------------------------------------------
+// Constructor: new
+// Initializes the  class object
+//
+// Parameters:
+//  name - instance name of the  master_template
+//-----------------------------------------------------------------------------
+function new(string name="axi_xtn");
+super.new(name);
+endfunction
+
+//////////////////////////////////////////////////////////////
+`endif
