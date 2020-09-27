@@ -19,8 +19,8 @@
 //  
 //  ###########################################################################
 
-`ifndef GPIO_TOP_SV
-`define GPIO_TOP_SV
+`ifndef AXI4_TOP_SV
+`define AXI4_TOP_SV
 
 //-----------------------------------------------------------------------------
 //Module : axi4_top
@@ -32,18 +32,20 @@ module top;
 
 bit clock;
 
+axi_if i_f(clock);
+
+//Clock Generation
 always 
- #20 clock = ~clock;
+  #20 clock = ~clock;
 
- axi_if i_f(clock);
+//Invoking Test cases
+initial begin
+  uvm_config_db #(virtual axi_if)::set(null,"*","vif",i_f);
+  run_test("basic_write_test"); 
+end
 
- initial
-   begin
+endmodule
 
-     uvm_config_db #(virtual axi_if)::set(null,"*","vif",i_f);
-       run_test("basic"); 
-         end
+`endif
 
-	 endmodule
-
-	 `endif
+//----E.O.F------
