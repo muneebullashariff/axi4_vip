@@ -41,7 +41,7 @@ always
 //Invoking Test cases
 initial begin
   uvm_config_db #(virtual axi_if)::set(null,"*","vif",i_f);
-  run_test("basic_write_test"); 
+  run_test("base_test"); 
 end
 
 endmodule
