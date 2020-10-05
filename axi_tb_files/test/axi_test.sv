@@ -55,16 +55,17 @@ axi_env env;
 endclass
 
 
-//Test 1: Write Sequence
-class axi_write_test extends axi_test;
+//Test 1: Write and Read sequence Test
+class axi_write_read_test extends axi_test;
 
 axi_write_sequence wr_sequence;
+axi_read_sequence rd_sequence;
  
 //Factory registration	
 	`uvm_component_utils (axi_write_test)
 	
 //Constructor	
-	function new(string name = "axi_write_test", uvm_component parent);
+	function new(string name = "axi_write_read_test", uvm_component parent);
     	super.new(name, parent);
 	endfunction
 	
@@ -75,8 +76,11 @@ axi_write_sequence wr_sequence;
 	function run_phase (uvm_phase phase);	
 		
 		wr_sequence = axi_write_sequence::typeid::create("wr_sequence");
+		rd_sequence = axi_read_sequence::typeid::create("rd_sequence");
+		
 		phase.raise_objection(this);
 			wr_sequence.start(env.v_seqr);
+			rd_sequence.start(env.v_seqr);
 		#100;	
 		phase.drop_objection(this);
 	
