@@ -27,7 +27,7 @@
 // Description of the class : routes the seq_item to driver
 //-----------------------------------------------------------------------------
 
-class axi_master_sequencer extends uvm_sequencer#(axi_trans);
+class axi_master_sequencer extends uvm_sequencer#(axi_master_trans);
 
  //Factory registration
   `uvm_component_utils(axi_master_sequencer)
