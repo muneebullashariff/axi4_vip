@@ -211,10 +211,10 @@ property writebursttype_stable;
 endproperty
 AWBURST_STABLE: assert property (writebursttype_stable);
 
-// Write Burst Type can’t be 2’b11 as it is reserved
+// Write Burst Type canâ€™t be 2â€™b11 as it is reserved
 property writeburst_reserved;
  @(posedge ACLK) disable iff(ARESETn)
-AWVALID |-> (AWBURST !=2’b11);
+AWVALID |-> (AWBURST !=2â€™b11);
 endproperty
 AWBURST_RESVD: assert property (writeburst_reserved);
 
@@ -355,11 +355,11 @@ ARCACHE_X: assert property (@(posedge ACLK) ARVALID |-> (!$isunknown(ARCACHE)));
 
 ARPROT_X: assert property (@(posedge ACLK) ARVALID |-> (!$isunknown(ARPROT)));
 
-// Read burst type can’t be reserved
+// Read burst type canâ€™t be reserved
 
 property readburst_reserved;
  @(posedge ACLK) disable iff(ARESETn)
-ARVALID |-> (ARBURST !=2’b11);
+ARVALID |-> (ARBURST !=2â€™b11);
 endproperty
 ARBURST_RESVD: assert property (readburst_reserved);
 
