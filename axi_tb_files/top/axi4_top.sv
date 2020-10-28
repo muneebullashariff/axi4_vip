@@ -30,6 +30,10 @@
 
 module top;
 
+//Import Packages
+import uvm_pkg::*;
+import axi_pkg::*;
+
 bit clock;
 
 axi_if i_f(clock);
